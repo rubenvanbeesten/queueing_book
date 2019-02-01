@@ -73,7 +73,12 @@ Finally, bring $B$ to one side.
 \end{exercise}
 \end{comment}
 
-Let us assume that adjustments occur geometrically distributed, i.e., have the memoryless property in discrete time, between any two jobs with a mean of $B$ jobs between any two repairs.  Thus, the probability of a repair between two jobs is $p=1/B$. 
+Let us assume that the occurence of adjustments is geometrically distributed, i.e., have the memoryless property in discrete time, and assume that the mean number of jobs between any two repairs is given by $B$. Thus, the probability of a repair between two jobs is $p=1/B$. Moreover, the time $T$ spent during an adjustment is stochastic. We will model this setting by including the adjustment time in the service time.
+
+Consider a single job $k$ that is ready to be served. We will find an expression for its \emph{effective service time} $S_k$. We model the \emph{net service time} by the random variable $S_{0,k}$. In addition, an adjustment (interruption) may occur with probability $p=1/B$, which we model by the Bernoilli random variable $I_k$. If an interruption occurs, it will take stochastic time $T_k$. We assume that $S_k$, $I_k$, and $T_k$, $k=1,2,\ldots$ are i.i.d. and mutually independent. We can now express the effective service time of job $k$ as
+\begin{equation*}
+  S_k = S_{0,k} + I_k T_k.
+\end{equation*}
 
 \begin{exercise}
   Show that the average \recall{effective processing time} $S$, i.e., the time the service is occupied with processing jobs including adjustments, is 
@@ -84,10 +89,11 @@ Let us assume that adjustments occur geometrically distributed, i.e., have the m
 If there is no failure, the service time is $S_0$. If there is a failure, the service of a job is $T + S_0$, since we add the outage time to the service time of the job. 
 \end{hint}
   \begin{solution}
+  Using independence of $I$ and $T$, we obtain
     \begin{equation*}
-      \E{S} = (1-p)\E{S_0} + p (\E{T} + \E{S_0}) = \E{S_0} \frac{B-1}B + (\E{S_0} + \E T) \frac 1B,
+      \E{S} = \E{S_0} + \E{I}\E{T} = \E{S_0} + \frac{\E{T}}{B},
     \end{equation*}
-since $p=1/B$. 
+since $\E{I} = p = 1/B$. 
   \end{solution}
 \end{exercise}
 
@@ -99,14 +105,30 @@ Thus the effective server load including downtimes is $\rho = \lambda \E{S}$.
   \begin{equation*}
     \E{S^2} = \E{S_0^2} + 2\frac{\E{S_0}\E{T}} B + \frac{\E{T^2}}B.
   \end{equation*}
+  \begin{hint}
+  Use mutual independence of $S_0$, $I$, and $T$.
+  \end{hint}
   \begin{solution}
+  Using mutual independence of $S_0$, $I$ and $T$, we obtain
   \begin{equation*}
     \begin{split}
     \E{S^2} 
-&= \E{S_0^2}\frac{B-1}B + \E{(S_0+T)^2}\frac 1B \\
-&= \E{S_0^2}\frac{B-1}B + \E{S_0^2} \frac 1 B + 2 \E{S_0} \E T\frac 1B + \E{T^2}\frac 1B
+    &= \E{(S_0 + I T)^2} \\
+    &= \E{S_0^2 + 2 S_0 I T + I^2 T^2} \\
+    &= \E{S_0^2} + 2 \E{S_0} \E{I} \E{T} + \E{I^2} \E{T^2} \\
+    &= \E{S_0^2} + 2 \frac{\E{S_0} \E{T}}{B} + \frac{\E{T^2}}{B}.
     \end{split}
   \end{equation*}
+  Another route is to condition on the possible outcomes of $I$ (adjustment or not):
+  \begin{equation*}
+      \begin{split}
+      \E{S^2} 
+      &= \P{I=0} \E{S^2 \ | \ I=0} + \P{I=1} \E{S^2 \ | \ I=0} \\
+      &= (1-p) \E{S_0^2} + p \E{(S_0 + T)^2} \\
+      &= (1-p) \E{S_0^2} + p \E{S_0^2} + 2p\E{S_0}\E{T} + p \E{T^2} \\
+      &= \E{S_0^2} + 2 \frac{\E{S_0} \E{T}}{B} + \frac{\E{T^2}}{B}.
+      \end{split}
+    \end{equation*}
   \end{solution}
 \end{exercise}
 
@@ -116,6 +138,7 @@ Thus the effective server load including downtimes is $\rho = \lambda \E{S}$.
     \V{S} = \V{S_0} + \frac{\V{T}} B + (B-1)\left(\frac{\E T}{B}\right)^2.
   \end{equation*}
   \begin{solution}
+  Straightforward substitution yields
     \begin{equation*}
       \begin{split}
 \V{S} 
